@@ -1,41 +1,17 @@
 import React from 'react';
 import { Button, Checkbox, Form, Input, InputNumber, Space, message } from 'antd';
 import { useActionContext, useRequest } from '@nocobase/client';
-
-type FormValues = {
-  host?: string;
-  port?: number;
-  database?: string;
-  username?: string;
-  password: string;
-  encrypt?: boolean;
-};
-
-type ConnectionPayload = Omit<FormValues, 'encrypt'> & {
-  dialectOptions: {
-    options: {
-      encrypt: boolean;
-    };
-  };
-};
-
-const normalizePayload = (values: FormValues): ConnectionPayload => {
-  const { encrypt, ...rest } = values;
-  return {
-    ...rest,
-    dialectOptions: {
-      options: {
-        encrypt: !!encrypt,
-      },
-    },
-  };
-};
+import {
+  MssqlFormValues,
+  NormalizedMssqlPayload,
+  normalizeMssqlPayload,
+} from '../utils/normalizeMssqlPayload';
 
 const MssqlConfigForm: React.FC = () => {
-  const [form] = Form.useForm<FormValues>();
+  const [form] = Form.useForm<MssqlFormValues>();
   const action = useActionContext();
   const { run: testConnection, loading } = useRequest(
-    (data: ConnectionPayload) => ({
+    (data: NormalizedMssqlPayload) => ({
       url: 'external-mssql:testConnection',
       method: 'post',
       data,
@@ -46,7 +22,7 @@ const MssqlConfigForm: React.FC = () => {
   const handleTestConnection = async () => {
     try {
       const values = await form.validateFields();
-      await testConnection(normalizePayload(values));
+      await testConnection(normalizeMssqlPayload(values));
       message.success('Connection successful');
     } catch (error: any) {
       const msg =
@@ -57,9 +33,9 @@ const MssqlConfigForm: React.FC = () => {
     }
   };
 
-  const handleFinish = async (values: FormValues) => {
+  const handleFinish = async (values: MssqlFormValues) => {
     if (action?.run) {
-      await action.run(normalizePayload(values));
+      await action.run(normalizeMssqlPayload(values));
     }
   };
 
@@ -68,7 +44,7 @@ const MssqlConfigForm: React.FC = () => {
       form={form}
       layout="vertical"
       onFinish={handleFinish}
-      initialValues={{ port: 1433, encrypt: false }}
+      initialValues={{ port: 1433, encrypt: false, schema: 'dbo' }}
     >
       <Form.Item
         name="host"
@@ -87,6 +63,9 @@ const MssqlConfigForm: React.FC = () => {
       >
         <Input />
       </Form.Item>
+      <Form.Item name="schema" label="Schema">
+        <Input placeholder="dbo" />
+      </Form.Item>
       <Form.Item
         name="username"
         label="Username"
@@ -103,6 +82,9 @@ const MssqlConfigForm: React.FC = () => {
       </Form.Item>
       <Form.Item name="encrypt" valuePropName="checked">
         <Checkbox>Encrypt connection (SSL/TLS)</Checkbox>
+      </Form.Item>
+      <Form.Item name="trustServerCertificate" valuePropName="checked">
+        <Checkbox>Trust server certificate</Checkbox>
       </Form.Item>
 
       <Space>

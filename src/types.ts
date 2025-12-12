@@ -4,6 +4,7 @@ export interface MssqlConnectionOptions {
   username: string;
   password: string;
   database: string;
+  schema?: string;
   dialectOptions?: {
     options?: {
       encrypt?: boolean;

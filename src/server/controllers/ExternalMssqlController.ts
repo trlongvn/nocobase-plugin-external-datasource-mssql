@@ -13,11 +13,12 @@ type DialectOptions = {
 type LoggingOption = boolean | ((sql: string, timing?: number) => void);
 
 type TestConnectionBody = {
-  host?: string;
+  host: string;
   port?: number;
-  username?: string;
-  password?: string;
-  database?: string;
+  username: string;
+  password: string;
+  database: string;
+  schema?: string;
   dialectOptions?: DialectOptions;
   logging?: LoggingOption;
 };
@@ -38,15 +39,16 @@ export class ExternalMssqlController extends Controller {
       username,
       password,
       database,
+      schema,
       dialectOptions,
       logging,
     } = (ctx.request?.body as TestConnectionBody) || {};
 
-    if (!host || !database || !username) {
+    if (!host || !database || !username || !password) {
       ctx.status = 400;
       ctx.body = {
         status: 'error',
-        message: 'Host, database, and username are required to test the connection.',
+        message: 'Host, database, username, and password are required to test the connection.',
       };
       return;
     }
@@ -58,6 +60,7 @@ export class ExternalMssqlController extends Controller {
       username,
       password,
       database,
+      schema,
       logging,
       dialectOptions,
     });

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAPIClient } from '@nocobase/client';
 import { Form, Input, InputNumber, Button, message, Space, Checkbox } from 'antd';
+import { MssqlFormValues, normalizeMssqlPayload } from './utils/normalizeMssqlPayload';
 
 export const MssqlConfigurationForm: React.FC<any> = (props) => {
   const { value, onChange } = props;
@@ -10,18 +11,9 @@ export const MssqlConfigurationForm: React.FC<any> = (props) => {
 
   const handleTestConnection = async () => {
     try {
-      const values = await form.validateFields();
+      const values = await form.validateFields<MssqlFormValues>();
       setLoading(true);
-      const { encrypt, trustServerCertificate, ...rest } = values;
-      const payload = {
-        ...rest,
-        dialectOptions: {
-          options: {
-            encrypt: !!encrypt,
-            trustServerCertificate: !!trustServerCertificate,
-          },
-        },
-      };
+      const payload = normalizeMssqlPayload(values);
 
       const response = await api.request({
         url: 'external-mssql:testConnection',
