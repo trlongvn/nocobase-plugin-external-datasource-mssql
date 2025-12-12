@@ -31,8 +31,8 @@ export const normalizeMssqlPayload = (values: MssqlFormValues): NormalizedMssqlP
     encrypt: !!encrypt,
   };
 
-  if (typeof trustServerCertificate !== 'undefined') {
-    options.trustServerCertificate = !!trustServerCertificate;
+  if (trustServerCertificate !== undefined) {
+    options.trustServerCertificate = Boolean(trustServerCertificate);
   }
 
   if (!password) {

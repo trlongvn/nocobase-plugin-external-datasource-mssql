@@ -7,6 +7,13 @@ import {
   normalizeMssqlPayload,
 } from '../utils/normalizeMssqlPayload';
 
+const DEFAULT_INITIAL_VALUES: Partial<MssqlFormValues> = {
+  port: 1433,
+  encrypt: false,
+  schema: 'dbo',
+  trustServerCertificate: false,
+};
+
 const MssqlConfigForm: React.FC = () => {
   const [form] = Form.useForm<MssqlFormValues>();
   const action = useActionContext();
@@ -44,7 +51,7 @@ const MssqlConfigForm: React.FC = () => {
       form={form}
       layout="vertical"
       onFinish={handleFinish}
-      initialValues={{ port: 1433, encrypt: false, schema: 'dbo' }}
+      initialValues={DEFAULT_INITIAL_VALUES}
     >
       <Form.Item
         name="host"
