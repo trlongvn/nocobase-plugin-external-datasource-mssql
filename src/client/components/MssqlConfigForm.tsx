@@ -97,7 +97,6 @@ const MssqlConfigForm: React.FC = () => {
       <Form.Item
         name="password"
         label="Password"
-        rules={[{ required: true, message: 'Please enter password' }]}
       >
         <Input.Password />
       </Form.Item>

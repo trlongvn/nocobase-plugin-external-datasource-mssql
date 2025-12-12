@@ -7,6 +7,11 @@ type AuthenticatableDatabase = Database & {
   };
 };
 
+/**
+ * Attempts to authenticate an MSSQL database instance. Prefers a dedicated
+ * authenticate method when available and falls back to the underlying
+ * Sequelize instance as needed.
+ */
 export const authenticateDatabase = async (db: AuthenticatableDatabase): Promise<void> => {
   if (typeof db.authenticate === 'function') {
     await db.authenticate();
