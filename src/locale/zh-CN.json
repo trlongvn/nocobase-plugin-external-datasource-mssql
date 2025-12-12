@@ -1,0 +1,16 @@
+{
+  "MSSQL": "Microsoft SQL Server",
+  "MSSQL External Data Source": "MSSQL 外部数据源",
+  "Connect to external Microsoft SQL Server database": "连接到外部 Microsoft SQL Server 数据库",
+  "Host": "主机",
+  "Port": "端口",
+  "Database": "数据库",
+  "Schema": "架构",
+  "Username": "用户名",
+  "Password": "密码",
+  "Test Connection": "测试连接",
+  "Connection successful": "连接成功",
+  "Connection failed": "连接失败",
+  "Encrypt Connection": "加密连接",
+  "Trust Server Certificate": "信任服务器证书"
+}
