@@ -1,5 +1,6 @@
 import Database from '@nocobase/database';
 import { Controller } from '@nocobase/server';
+import { authenticateDatabase } from '../utils/authenticateDatabase';
 
 export class ExternalMssqlController extends Controller {
   async testConnection(ctx: any) {
@@ -25,11 +26,7 @@ export class ExternalMssqlController extends Controller {
     });
 
     try {
-      if (tempDB.authenticate) {
-        await tempDB.authenticate();
-      } else if (tempDB.sequelize) {
-        await tempDB.sequelize.authenticate();
-      }
+      await authenticateDatabase(tempDB);
       ctx.body = { status: 'success' };
     } catch (error: any) {
       ctx.status = 400;

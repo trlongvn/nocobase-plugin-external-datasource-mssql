@@ -16,7 +16,6 @@ const normalizePayload = (values: FormValues) => {
   return {
     ...rest,
     dialectOptions: {
-      encrypt: !!encrypt,
       options: {
         encrypt: !!encrypt,
       },

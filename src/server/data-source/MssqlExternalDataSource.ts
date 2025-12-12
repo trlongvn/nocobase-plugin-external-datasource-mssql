@@ -1,5 +1,6 @@
 import Database from '@nocobase/database';
 import { DataSource } from '@nocobase/plugin-data-source-manager';
+import { authenticateDatabase } from '../utils/authenticateDatabase';
 
 interface MssqlDataSourceOptions {
   database?: string;
@@ -39,11 +40,7 @@ export class MssqlExternalDataSource extends DataSource {
       dialectOptions,
     });
 
-    if (typeof this.database.authenticate === 'function') {
-      await this.database.authenticate();
-    } else if (this.database.sequelize) {
-      await this.database.sequelize.authenticate();
-    }
+    await authenticateDatabase(this.database);
   }
 
   get collectionManager() {
@@ -54,8 +51,6 @@ export class MssqlExternalDataSource extends DataSource {
     if (this.database) {
       await this.database.close();
     }
-    if (super.destroy) {
-      await super.destroy();
-    }
+    await super.destroy?.();
   }
 }
