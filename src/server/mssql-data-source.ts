@@ -1,14 +1,6 @@
 import { DataSource } from '@nocobase/database';
 import { Database } from '@nocobase/database';
-
-export interface MssqlConnectionOptions {
-  host: string;
-  port: number;
-  user: string;
-  password: string;
-  database: string;
-  schema?: string;
-}
+import { MssqlConnectionOptions } from '../types';
 
 export class MssqlExternalDataSource extends DataSource {
   private db: Database;

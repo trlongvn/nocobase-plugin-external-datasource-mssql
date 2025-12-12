@@ -1,5 +1,6 @@
 import { Context } from '@nocobase/actions';
 import { MssqlExternalDataSource } from './mssql-data-source';
+import { TestConnectionResponse } from '../types';
 
 export class MssqlController {
   /**
@@ -14,7 +15,7 @@ export class MssqlController {
       ctx.body = {
         success: false,
         message: 'Missing required connection parameters',
-      };
+      } as TestConnectionResponse;
       return;
     }
 
@@ -39,14 +40,14 @@ export class MssqlController {
         message: isConnected
           ? 'Connection successful'
           : 'Connection failed',
-      };
+      } as TestConnectionResponse;
     } catch (error) {
       ctx.status = 500;
       ctx.body = {
         success: false,
         message: error.message || 'Connection test failed',
         error: error.toString(),
-      };
+      } as TestConnectionResponse;
     }
   }
 }
