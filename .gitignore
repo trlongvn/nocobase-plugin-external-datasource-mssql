@@ -1,4 +1,9 @@
 node_modules
 dist
-npm-debug.log*
-yarn-error.log*
+*.log
+.DS_Store
+.env
+.idea
+*.swp
+*.swo
+*~
