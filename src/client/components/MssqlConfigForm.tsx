@@ -27,10 +27,11 @@ const MssqlConfigForm: React.FC = () => {
   const [form] = Form.useForm<FormValues>();
   const action = useActionContext();
   const { run: testConnection, loading } = useRequest(
-    {
+    (data: any) => ({
       url: 'external-mssql:testConnection',
       method: 'post',
-    },
+      data,
+    }),
     { manual: true },
   );
 

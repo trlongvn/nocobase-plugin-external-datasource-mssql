@@ -1,12 +1,19 @@
 import Database from '@nocobase/database';
 
-export const authenticateDatabase = async (db: Database) => {
-  if (typeof (db as any).authenticate === 'function') {
-    await (db as any).authenticate();
+type AuthenticatableDatabase = Database & {
+  authenticate?: () => Promise<unknown>;
+  sequelize?: {
+    authenticate: () => Promise<unknown>;
+  };
+};
+
+export const authenticateDatabase = async (db: AuthenticatableDatabase) => {
+  if (typeof db.authenticate === 'function') {
+    await db.authenticate();
     return;
   }
 
-  if ((db as any).sequelize) {
-    await (db as any).sequelize.authenticate();
+  if (db.sequelize) {
+    await db.sequelize.authenticate();
   }
 };

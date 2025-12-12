@@ -2,8 +2,16 @@ import Database from '@nocobase/database';
 import { Controller } from '@nocobase/server';
 import { authenticateDatabase } from '../utils/authenticateDatabase';
 
+type RequestContext = {
+  request: {
+    body?: any;
+  };
+  status?: number;
+  body?: any;
+};
+
 export class ExternalMssqlController extends Controller {
-  async testConnection(ctx: any) {
+  async testConnection(ctx: RequestContext) {
     const {
       host,
       port,
