@@ -11,12 +11,7 @@ type FormValues = {
   encrypt?: boolean;
 };
 
-type ConnectionPayload = {
-  host?: string;
-  port?: number;
-  database?: string;
-  username?: string;
-  password?: string;
+type ConnectionPayload = Omit<FormValues, 'encrypt'> & {
   dialectOptions: {
     options: {
       encrypt: boolean;
@@ -57,7 +52,7 @@ const MssqlConfigForm: React.FC = () => {
       const msg =
         error?.response?.data?.message ||
         error?.message ||
-        'Unable to connect with the provided settings';
+        'Connection failed. Please verify host, port, credentials, and network connectivity.';
       message.error(msg);
     }
   };

@@ -1,5 +1,5 @@
 import Database from '@nocobase/database';
-import { Controller } from '@nocobase/server';
+import { Context, Controller } from '@nocobase/server';
 import { authenticateDatabase } from '../utils/authenticateDatabase';
 
 type DialectOptions = {
@@ -22,16 +22,8 @@ type TestConnectionBody = {
   logging?: LoggingOption;
 };
 
-type RequestContext = {
-  request: {
-    body?: TestConnectionBody;
-  };
-  status?: number;
-  body?: { status: 'success' | 'error'; message?: string };
-};
-
 export class ExternalMssqlController extends Controller {
-  async testConnection(ctx: RequestContext) {
+  async testConnection(ctx: Context) {
     const {
       host,
       port,
@@ -40,7 +32,7 @@ export class ExternalMssqlController extends Controller {
       database,
       dialectOptions,
       logging,
-    } = ctx.request.body || {};
+    } = (ctx.request?.body as TestConnectionBody) || {};
 
     const tempDB = new Database({
       dialect: 'mssql',

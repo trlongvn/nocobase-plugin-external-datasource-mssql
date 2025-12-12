@@ -24,6 +24,9 @@ interface MssqlDataSourceOptions {
 }
 
 export class MssqlExternalDataSource extends DataSource {
+  /**
+   * Underlying MSSQL database instance backing this data source.
+   */
   database: Database;
 
   async init() {
