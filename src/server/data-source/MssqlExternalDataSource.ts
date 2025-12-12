@@ -51,6 +51,6 @@ export class MssqlExternalDataSource extends DataSource {
     if (this.database) {
       await this.database.close();
     }
-    await super.destroy?.();
+    await super.destroy();
   }
 }

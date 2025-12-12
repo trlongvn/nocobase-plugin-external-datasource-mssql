@@ -15,5 +15,8 @@ export const authenticateDatabase = async (db: AuthenticatableDatabase) => {
 
   if (db.sequelize) {
     await db.sequelize.authenticate();
+    return;
   }
+
+  throw new Error('No authenticate method available on database instance');
 };
