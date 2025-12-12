@@ -2,7 +2,7 @@ export interface MssqlConnectionOptions {
   host: string;
   port?: number;
   username: string;
-  password?: string;
+  password: string;
   database: string;
   dialectOptions?: {
     options?: {

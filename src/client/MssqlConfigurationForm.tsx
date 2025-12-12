@@ -17,8 +17,8 @@ export const MssqlConfigurationForm: React.FC<any> = (props) => {
         ...rest,
         dialectOptions: {
           options: {
-            encrypt: encrypt !== false,
-            trustServerCertificate: trustServerCertificate !== false,
+            encrypt: !!encrypt,
+            trustServerCertificate: !!trustServerCertificate,
           },
         },
       };

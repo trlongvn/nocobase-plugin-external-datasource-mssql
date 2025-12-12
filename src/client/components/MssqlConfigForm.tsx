@@ -7,7 +7,7 @@ type FormValues = {
   port?: number;
   database?: string;
   username?: string;
-  password?: string;
+  password: string;
   encrypt?: boolean;
 };
 
@@ -97,6 +97,7 @@ const MssqlConfigForm: React.FC = () => {
       <Form.Item
         name="password"
         label="Password"
+        rules={[{ required: true, message: 'Please enter password' }]}
       >
         <Input.Password />
       </Form.Item>
