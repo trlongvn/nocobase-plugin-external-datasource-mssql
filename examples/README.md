@@ -11,7 +11,7 @@ import { MssqlExternalDataSource } from '@nocobase/plugin-external-datasource-ms
 const dataSource = new MssqlExternalDataSource({
   host: 'localhost',
   port: 1433,
-  user: 'sa',
+  username: 'sa',
   password: 'YourPassword123',
   database: 'MyDatabase',
   schema: 'dbo',
@@ -43,12 +43,12 @@ if (isConnected) {
 
 ```bash
 # Test connection
-curl -X POST http://localhost:13000/api/mssql:testConnection \
+curl -X POST http://localhost:13000/api/external-mssql:testConnection \
   -H "Content-Type: application/json" \
   -d '{
     "host": "localhost",
     "port": 1433,
-    "user": "sa",
+    "username": "sa",
     "password": "YourPassword123",
     "database": "MyDatabase",
     "schema": "dbo"
@@ -58,8 +58,7 @@ curl -X POST http://localhost:13000/api/mssql:testConnection \
 Response:
 ```json
 {
-  "success": true,
-  "message": "Connection successful"
+  "status": "success"
 }
 ```
 
@@ -69,7 +68,7 @@ Response:
 |--------|------|----------|---------|-------------|
 | host | string | Yes | - | MSSQL server hostname or IP address |
 | port | number | No | 1433 | Server port number |
-| user | string | Yes | - | Database username |
+| username | string | Yes | - | Database username |
 | password | string | Yes | - | Database password |
 | database | string | Yes | - | Database name |
 | schema | string | No | 'dbo' | Database schema |
@@ -85,7 +84,7 @@ Response:
 const azureDataSource = new MssqlExternalDataSource({
   host: 'myserver.database.windows.net',
   port: 1433,
-  user: 'myuser@myserver',
+  username: 'myuser@myserver',
   password: 'YourPassword123',
   database: 'mydatabase',
   encrypt: true,
@@ -99,7 +98,7 @@ const azureDataSource = new MssqlExternalDataSource({
 const localDataSource = new MssqlExternalDataSource({
   host: 'localhost',
   port: 1433,
-  user: 'sa',
+  username: 'sa',
   password: 'LocalPassword123',
   database: 'TestDB',
   schema: 'dbo',
@@ -113,7 +112,7 @@ const localDataSource = new MssqlExternalDataSource({
 ```typescript
 const customSchemaDataSource = new MssqlExternalDataSource({
   host: 'dbserver',
-  user: 'appuser',
+  username: 'appuser',
   password: 'AppPassword123',
   database: 'ProductionDB',
   schema: 'custom_schema', // Use custom schema instead of dbo

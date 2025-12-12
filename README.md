@@ -53,14 +53,14 @@ The plugin requires the following connection parameters:
 
 ### Test Connection
 
-**Endpoint:** `POST /api/mssql:testConnection`
+**Endpoint:** `POST /api/external-mssql:testConnection`
 
 **Request Body:**
 ```json
 {
   "host": "localhost",
   "port": 1433,
-  "user": "sa",
+  "username": "sa",
   "password": "your_password",
   "database": "your_database",
   "schema": "dbo"
@@ -70,8 +70,7 @@ The plugin requires the following connection parameters:
 **Response:**
 ```json
 {
-  "success": true,
-  "message": "Connection successful"
+  "status": "success"
 }
 ```
 

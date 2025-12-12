@@ -12,14 +12,24 @@ export const MssqlConfigurationForm: React.FC<any> = (props) => {
     try {
       const values = await form.validateFields();
       setLoading(true);
-      
+      const { encrypt, trustServerCertificate, ...rest } = values;
+      const payload = {
+        ...rest,
+        dialectOptions: {
+          options: {
+            encrypt: encrypt !== false,
+            trustServerCertificate: trustServerCertificate !== false,
+          },
+        },
+      };
+
       const response = await api.request({
-        url: 'mssql:testConnection',
+        url: 'external-mssql:testConnection',
         method: 'post',
-        data: values,
+        data: payload,
       });
 
-      if (response?.data?.success) {
+      if (response?.data?.status === 'success') {
         message.success('Connection successful!');
       } else {
         message.error(response?.data?.message || 'Connection failed');
@@ -82,7 +92,7 @@ export const MssqlConfigurationForm: React.FC<any> = (props) => {
 
       <Form.Item
         label="Username"
-        name="user"
+        name="username"
         rules={[{ required: true, message: 'Please input the username!' }]}
       >
         <Input placeholder="username" />

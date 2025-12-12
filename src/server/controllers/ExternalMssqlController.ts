@@ -31,7 +31,7 @@ export class ExternalMssqlController extends Controller {
    * Validates incoming connection parameters and attempts to authenticate with the target MSSQL instance.
    * Responds with `{ status: 'success' }` on success or `{ status: 'error', message }` with HTTP 400 on failure.
    */
-  async testConnection(ctx: Context) {
+  static async testConnection(ctx: Context) {
     const {
       host,
       port,
