@@ -30,6 +30,11 @@ export class MssqlExternalDataSource extends DataSource {
   database: Database;
 
   async init() {
+    const options = this.options as MssqlDataSourceOptions;
+    if (!options) {
+      throw new Error('MSSQL data source options are required.');
+    }
+
     const {
       database,
       username,
@@ -39,7 +44,7 @@ export class MssqlExternalDataSource extends DataSource {
       dialectOptions,
       logging,
       ...rest
-    }: MssqlDataSourceOptions = (this.options as MssqlDataSourceOptions) || {};
+    }: MssqlDataSourceOptions = options;
 
     this.database = new Database({
       ...rest,

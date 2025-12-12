@@ -34,6 +34,15 @@ export class ExternalMssqlController extends Controller {
       logging,
     } = (ctx.request?.body as TestConnectionBody) || {};
 
+    if (!host || !database || !username) {
+      ctx.status = 400;
+      ctx.body = {
+        status: 'error',
+        message: 'Host, database, and username are required to test the connection.',
+      };
+      return;
+    }
+
     const tempDB = new Database({
       dialect: 'mssql',
       host,
