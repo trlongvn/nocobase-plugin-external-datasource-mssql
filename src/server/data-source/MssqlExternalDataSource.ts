@@ -25,7 +25,8 @@ interface MssqlDataSourceOptions {
 
 export class MssqlExternalDataSource extends DataSource {
   /**
-   * Underlying MSSQL database instance backing this data source.
+   * Underlying MSSQL database instance created during init and closed in destroy.
+   * Exposes the collection manager used for collection CRUD operations.
    */
   database: Database;
 

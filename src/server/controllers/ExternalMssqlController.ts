@@ -22,7 +22,15 @@ type TestConnectionBody = {
   logging?: LoggingOption;
 };
 
+/**
+ * Controller exposing endpoints for the external MSSQL data source namespace.
+ */
 export class ExternalMssqlController extends Controller {
+  /**
+   * POST external-mssql:testConnection
+   * Validates incoming connection parameters and attempts to authenticate with the target MSSQL instance.
+   * Responds with `{ status: 'success' }` on success or `{ status: 'error', message }` with HTTP 400 on failure.
+   */
   async testConnection(ctx: Context) {
     const {
       host,
