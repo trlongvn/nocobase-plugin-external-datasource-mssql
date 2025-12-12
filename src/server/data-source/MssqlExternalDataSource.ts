@@ -2,14 +2,24 @@ import Database from '@nocobase/database';
 import { DataSource } from '@nocobase/plugin-data-source-manager';
 import { authenticateDatabase } from '../utils/authenticateDatabase';
 
+type MssqlDialectOptions = {
+  options?: {
+    encrypt?: boolean;
+    [key: string]: any;
+  };
+  [key: string]: any;
+};
+
+type LoggingOption = boolean | ((sql: string, timing?: number) => void);
+
 interface MssqlDataSourceOptions {
   database?: string;
   username?: string;
   password?: string;
   host?: string;
   port?: number;
-  dialectOptions?: any;
-  logging?: any;
+  dialectOptions?: MssqlDialectOptions;
+  logging?: LoggingOption;
   [key: string]: any;
 }
 

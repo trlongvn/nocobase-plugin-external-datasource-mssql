@@ -11,7 +11,20 @@ type FormValues = {
   encrypt?: boolean;
 };
 
-const normalizePayload = (values: FormValues) => {
+type ConnectionPayload = {
+  host?: string;
+  port?: number;
+  database?: string;
+  username?: string;
+  password?: string;
+  dialectOptions: {
+    options: {
+      encrypt: boolean;
+    };
+  };
+};
+
+const normalizePayload = (values: FormValues): ConnectionPayload => {
   const { encrypt, ...rest } = values;
   return {
     ...rest,
@@ -27,7 +40,7 @@ const MssqlConfigForm: React.FC = () => {
   const [form] = Form.useForm<FormValues>();
   const action = useActionContext();
   const { run: testConnection, loading } = useRequest(
-    (data: any) => ({
+    (data: ConnectionPayload) => ({
       url: 'external-mssql:testConnection',
       method: 'post',
       data,

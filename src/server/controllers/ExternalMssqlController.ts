@@ -2,12 +2,32 @@ import Database from '@nocobase/database';
 import { Controller } from '@nocobase/server';
 import { authenticateDatabase } from '../utils/authenticateDatabase';
 
+type DialectOptions = {
+  options?: {
+    encrypt?: boolean;
+    [key: string]: any;
+  };
+  [key: string]: any;
+};
+
+type LoggingOption = boolean | ((sql: string, timing?: number) => void);
+
+type TestConnectionBody = {
+  host?: string;
+  port?: number;
+  username?: string;
+  password?: string;
+  database?: string;
+  dialectOptions?: DialectOptions;
+  logging?: LoggingOption;
+};
+
 type RequestContext = {
   request: {
-    body?: any;
+    body?: TestConnectionBody;
   };
   status?: number;
-  body?: any;
+  body?: { status: 'success' | 'error'; message?: string };
 };
 
 export class ExternalMssqlController extends Controller {
