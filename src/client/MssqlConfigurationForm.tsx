@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SchemaComponent, useAPIClient } from '@nocobase/client';
+import { useAPIClient } from '@nocobase/client';
 import { Form, Input, InputNumber, Button, message, Space, Checkbox } from 'antd';
 
 export const MssqlConfigurationForm: React.FC<any> = (props) => {

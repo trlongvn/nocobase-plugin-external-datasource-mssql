@@ -1,5 +1,4 @@
-import { DataSource } from '@nocobase/database';
-import { Database } from '@nocobase/database';
+import { DataSource, Database } from '@nocobase/database';
 import { MssqlConnectionOptions } from '../types';
 
 export class MssqlExternalDataSource extends DataSource {
