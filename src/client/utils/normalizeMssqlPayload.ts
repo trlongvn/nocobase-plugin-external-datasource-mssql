@@ -4,7 +4,7 @@ export type MssqlFormValues = {
   database?: string;
   schema?: string;
   username?: string;
-  password?: string;
+  password: string;
   encrypt?: boolean;
   trustServerCertificate?: boolean;
 };
@@ -23,7 +23,7 @@ export type NormalizedMssqlPayload = Omit<
 };
 
 export const normalizeMssqlPayload = (values: MssqlFormValues): NormalizedMssqlPayload => {
-  const { encrypt, trustServerCertificate, password = '', ...rest } = values;
+  const { encrypt, trustServerCertificate, password, ...rest } = values;
   const options: {
     encrypt: boolean;
     trustServerCertificate?: boolean;
