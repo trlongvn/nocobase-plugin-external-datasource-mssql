@@ -59,6 +59,7 @@ export class MssqlExternalDataSource extends DataSource {
       dialectOptions,
     });
 
+    await this.database.init();
     await authenticateDatabase(this.database);
   }
 
