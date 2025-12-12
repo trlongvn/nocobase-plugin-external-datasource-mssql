@@ -45,10 +45,10 @@ export class ExternalMssqlController extends Controller {
     } = (ctx.request?.body as TestConnectionBody) || {};
 
     const missingRequired =
-      !host?.toString().trim() ||
-      !database?.toString().trim() ||
-      !username?.toString().trim() ||
-      !password?.toString().trim();
+      !host?.toString?.()?.trim() ||
+      !database?.toString?.()?.trim() ||
+      !username?.toString?.()?.trim() ||
+      !password?.toString?.()?.trim();
 
     if (missingRequired) {
       ctx.status = 400;

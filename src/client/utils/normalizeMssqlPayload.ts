@@ -23,7 +23,7 @@ export type NormalizedMssqlPayload = Omit<
 };
 
 export const normalizeMssqlPayload = (values: MssqlFormValues): NormalizedMssqlPayload => {
-  const { encrypt, trustServerCertificate, password, ...rest } = values;
+  const { encrypt, trustServerCertificate, password = '', ...rest } = values;
   const options: {
     encrypt: boolean;
     trustServerCertificate?: boolean;
@@ -33,10 +33,6 @@ export const normalizeMssqlPayload = (values: MssqlFormValues): NormalizedMssqlP
 
   if (trustServerCertificate !== undefined) {
     options.trustServerCertificate = Boolean(trustServerCertificate);
-  }
-
-  if (!password) {
-    throw new Error('Password is required');
   }
 
   return {

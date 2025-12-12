@@ -8,8 +8,8 @@ export interface MssqlConnectionOptions {
   dialectOptions?: {
     options?: {
       encrypt?: boolean;
+      trustServerCertificate?: boolean;
     };
-    [key: string]: any;
   };
   logging?: boolean;
 }
