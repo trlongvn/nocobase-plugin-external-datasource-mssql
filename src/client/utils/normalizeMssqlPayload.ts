@@ -4,12 +4,16 @@ export type MssqlFormValues = {
   database?: string;
   schema?: string;
   username?: string;
-  password: string;
+  password?: string;
   encrypt?: boolean;
   trustServerCertificate?: boolean;
 };
 
-export type NormalizedMssqlPayload = Omit<MssqlFormValues, 'encrypt' | 'trustServerCertificate'> & {
+export type NormalizedMssqlPayload = Omit<
+  MssqlFormValues,
+  'encrypt' | 'trustServerCertificate' | 'password'
+> & {
+  password: string;
   dialectOptions: {
     options: {
       encrypt: boolean;
@@ -19,7 +23,7 @@ export type NormalizedMssqlPayload = Omit<MssqlFormValues, 'encrypt' | 'trustSer
 };
 
 export const normalizeMssqlPayload = (values: MssqlFormValues): NormalizedMssqlPayload => {
-  const { encrypt, trustServerCertificate, ...rest } = values;
+  const { encrypt, trustServerCertificate, password, ...rest } = values;
   const options: {
     encrypt: boolean;
     trustServerCertificate?: boolean;
@@ -31,8 +35,13 @@ export const normalizeMssqlPayload = (values: MssqlFormValues): NormalizedMssqlP
     options.trustServerCertificate = !!trustServerCertificate;
   }
 
+  if (!password) {
+    throw new Error('Password is required');
+  }
+
   return {
     ...rest,
+    password,
     dialectOptions: {
       options,
     },

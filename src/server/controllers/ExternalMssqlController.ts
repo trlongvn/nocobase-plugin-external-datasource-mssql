@@ -66,6 +66,7 @@ export class ExternalMssqlController extends Controller {
     });
 
     try {
+      await tempDB.init();
       await authenticateDatabase(tempDB);
       ctx.body = { status: 'success' };
     } catch (error: any) {

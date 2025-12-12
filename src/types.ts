@@ -14,7 +14,6 @@ export interface MssqlConnectionOptions {
   logging?: boolean;
 }
 
-export interface TestConnectionResponse {
-  status: 'success' | 'error';
-  message?: string;
-}
+export type TestConnectionResponse =
+  | { status: 'success' }
+  | { status: 'error'; message: string };
