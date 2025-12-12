@@ -1,0 +1,16 @@
+{
+  "MSSQL": "Microsoft SQL Server",
+  "MSSQL External Data Source": "MSSQL External Data Source",
+  "Connect to external Microsoft SQL Server database": "Connect to external Microsoft SQL Server database",
+  "Host": "Host",
+  "Port": "Port",
+  "Database": "Database",
+  "Schema": "Schema",
+  "Username": "Username",
+  "Password": "Password",
+  "Test Connection": "Test Connection",
+  "Connection successful": "Connection successful",
+  "Connection failed": "Connection failed",
+  "Encrypt Connection": "Encrypt Connection",
+  "Trust Server Certificate": "Trust Server Certificate"
+}

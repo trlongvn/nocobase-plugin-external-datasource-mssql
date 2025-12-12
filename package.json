@@ -1,0 +1,40 @@
+{
+  "name": "@nocobase/plugin-external-datasource-mssql",
+  "version": "0.1.0",
+  "displayName": "MSSQL External Data Source",
+  "displayName.zh-CN": "MSSQL 外部数据源",
+  "description": "NocoBase MSSQL External Data Source Plugin",
+  "main": "dist/server/index.js",
+  "exports": {
+    ".": "./dist/server/index.js",
+    "./client": "./dist/client/index.js"
+  },
+  "license": "MIT",
+  "keywords": [
+    "nocobase",
+    "plugin",
+    "mssql",
+    "external-datasource"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "peerDependencies": {
+    "@nocobase/server": ">=0.14.0",
+    "@nocobase/client": ">=0.14.0"
+  },
+  "dependencies": {
+    "mssql": "^10.0.1",
+    "tedious": "^16.6.1"
+  },
+  "devDependencies": {
+    "@nocobase/server": "^0.14.0",
+    "@nocobase/client": "^0.14.0",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "antd": "^5.0.0",
+    "react": "^18.0.0",
+    "typescript": "^5.0.0"
+  }
+}
