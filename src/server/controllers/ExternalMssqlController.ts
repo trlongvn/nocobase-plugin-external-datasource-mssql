@@ -2,7 +2,7 @@ import Database from '@nocobase/database';
 import { Controller } from '@nocobase/server';
 
 export class ExternalMssqlController extends Controller {
-  async testConnection(ctx) {
+  async testConnection(ctx: any) {
     const {
       host,
       port,

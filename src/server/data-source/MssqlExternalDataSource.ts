@@ -1,6 +1,17 @@
 import Database from '@nocobase/database';
 import { DataSource } from '@nocobase/plugin-data-source-manager';
 
+interface MssqlDataSourceOptions {
+  database?: string;
+  username?: string;
+  password?: string;
+  host?: string;
+  port?: number;
+  dialectOptions?: any;
+  logging?: any;
+  [key: string]: any;
+}
+
 export class MssqlExternalDataSource extends DataSource {
   database: Database;
 
@@ -14,7 +25,7 @@ export class MssqlExternalDataSource extends DataSource {
       dialectOptions,
       logging,
       ...rest
-    } = (this.options as any) || {};
+    }: MssqlDataSourceOptions = (this.options as MssqlDataSourceOptions) || {};
 
     this.database = new Database({
       ...rest,
