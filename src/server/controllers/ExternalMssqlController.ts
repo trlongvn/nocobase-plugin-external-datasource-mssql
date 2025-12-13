@@ -1,5 +1,4 @@
 import Database from '@nocobase/database';
-import { Context, Controller } from '@nocobase/server';
 import { authenticateDatabase } from '../utils/authenticateDatabase';
 
 type DialectOptions = {
@@ -26,13 +25,13 @@ type TestConnectionBody = {
 /**
  * Controller exposing endpoints for the external MSSQL data source namespace.
  */
-export class ExternalMssqlController extends Controller {
+export class ExternalMssqlController {
   /**
    * POST external-mssql:testConnection
    * Validates incoming connection parameters and attempts to authenticate with the target MSSQL instance.
    * Responds with `{ status: 'success' }` on success or `{ status: 'error', message }` with HTTP 400 on failure.
    */
-  static async testConnection(ctx: Context) {
+  static async testConnection(ctx: any) {
     const {
       host,
       port,
@@ -69,7 +68,6 @@ export class ExternalMssqlController extends Controller {
     });
 
     try {
-      await tempDB.init();
       await authenticateDatabase(tempDB);
       ctx.body = { status: 'success' };
     } catch (error: any) {

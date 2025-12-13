@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Checkbox, Form, Input, InputNumber, Space, message } from 'antd';
-import { useActionContext, useRequest } from '@nocobase/client';
+import { useAPIClient, useRequest } from '@nocobase/client';
 import {
   MssqlFormValues,
   NormalizedMssqlPayload,
@@ -14,15 +14,26 @@ const DEFAULT_INITIAL_VALUES: Partial<MssqlFormValues> = {
   trustServerCertificate: false,
 };
 
-const MssqlConfigForm: React.FC = () => {
+type FormProps = {
+  onSubmit?: (values: NormalizedMssqlPayload) => void | Promise<void>;
+  onChange?: (values: MssqlFormValues) => void;
+};
+
+const MssqlConfigForm: React.FC<FormProps> = ({ onSubmit, onChange }) => {
   const [form] = Form.useForm<MssqlFormValues>();
-  const action = useActionContext();
+  const api = useAPIClient();
   const { run: testConnection, loading } = useRequest(
-    (data: NormalizedMssqlPayload) => ({
-      url: 'external-mssql:testConnection',
-      method: 'post',
-      data,
-    }),
+    async (data: NormalizedMssqlPayload) => {
+      const response = await api.request({
+        url: 'external-mssql:testConnection',
+        method: 'post',
+        data,
+      });
+      if (response?.data?.status === 'error') {
+        throw new Error(response.data.message);
+      }
+      return response?.data;
+    },
     { manual: true },
   );
 
@@ -41,8 +52,15 @@ const MssqlConfigForm: React.FC = () => {
   };
 
   const handleFinish = async (values: MssqlFormValues) => {
-    if (action?.run) {
-      await action.run(normalizeMssqlPayload(values));
+    const payload = normalizeMssqlPayload(values);
+    if (onSubmit) {
+      await onSubmit(payload);
+    }
+  };
+
+  const handleValuesChange = (_changed: any, allValues: MssqlFormValues) => {
+    if (onChange) {
+      onChange(allValues);
     }
   };
 
@@ -51,6 +69,7 @@ const MssqlConfigForm: React.FC = () => {
       form={form}
       layout="vertical"
       onFinish={handleFinish}
+      onValuesChange={handleValuesChange}
       initialValues={DEFAULT_INITIAL_VALUES}
     >
       <Form.Item

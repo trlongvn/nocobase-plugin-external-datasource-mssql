@@ -9,7 +9,7 @@ export class PluginExternalDatasourceMssqlServer extends Plugin {
 
   async load() {
     // Register the MSSQL data source type
-    this.app.dataSourceManager.factory.register(
+    this.app.dataSourceManager.registerDataSourceType(
       'mssql-external',
       MssqlExternalDataSource
     );

@@ -11,7 +11,7 @@ export const MssqlConfigurationForm: React.FC<any> = (props) => {
 
   const handleTestConnection = async () => {
     try {
-      const values = await form.validateFields<MssqlFormValues>();
+      const values = await form.validateFields();
       setLoading(true);
       const payload = normalizeMssqlPayload(values);
 
@@ -26,8 +26,8 @@ export const MssqlConfigurationForm: React.FC<any> = (props) => {
       } else {
         message.error(response?.data?.message || 'Connection failed');
       }
-    } catch (error) {
-      message.error('Connection test failed: ' + (error.message || 'Unknown error'));
+    } catch (error: any) {
+      message.error('Connection test failed: ' + (error?.message || 'Unknown error'));
     } finally {
       setLoading(false);
     }
