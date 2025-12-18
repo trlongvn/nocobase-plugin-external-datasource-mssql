@@ -26,6 +26,30 @@ interface MssqlDataSourceOptions {
 export class MssqlExternalDataSource extends SequelizeDataSource {
   database: Database;
 
+  static async testConnection(options: MssqlDataSourceOptions) {
+    const { database, username, password, host, port, dialectOptions, logging, ...rest } =
+      options || ({} as MssqlDataSourceOptions);
+
+    const tempDB = new Database({
+      ...rest,
+      dialect: 'mssql',
+      database,
+      username,
+      password,
+      host,
+      port,
+      logging,
+      dialectOptions,
+    });
+
+    try {
+      await authenticateDatabase(tempDB as any);
+      return true;
+    } finally {
+      await tempDB.close();
+    }
+  }
+
   constructor(options: MssqlDataSourceOptions) {
     const { database, username, password, host, port, dialectOptions, logging, ...rest } = options;
     const dbInstance = new Database({
