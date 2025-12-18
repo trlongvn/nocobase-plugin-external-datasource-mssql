@@ -23,8 +23,50 @@ interface MssqlDataSourceOptions {
   [key: string]: any;
 }
 
+type AuthenticatableDB = Parameters<typeof authenticateDatabase>[0];
+
 export class MssqlExternalDataSource extends SequelizeDataSource {
-  database: Database;
+  database: AuthenticatableDB;
+
+  static async testConnection(options: MssqlDataSourceOptions) {
+    if (!options) {
+      throw new Error('Connection options are required to test MSSQL connectivity');
+    }
+
+    if (!options.host?.trim()) {
+      throw new Error('Host is required to test the connection.');
+    }
+    if (!options.database?.trim()) {
+      throw new Error('Database is required to test the connection.');
+    }
+    if (!options.username?.trim()) {
+      throw new Error('Username is required to test the connection.');
+    }
+    if (!options.password?.trim()) {
+      throw new Error('Password is required to test the connection.');
+    }
+
+    const { database, username, password, host, port, dialectOptions, logging, ...rest } = options;
+
+    const tempDB: AuthenticatableDB = new Database({
+      ...rest,
+      dialect: 'mssql',
+      database,
+      username,
+      password,
+      host,
+      port,
+      logging,
+      dialectOptions,
+    });
+
+    try {
+      await authenticateDatabase(tempDB);
+      return true;
+    } finally {
+      await tempDB.close();
+    }
+  }
 
   constructor(options: MssqlDataSourceOptions) {
     const { database, username, password, host, port, dialectOptions, logging, ...rest } = options;
@@ -47,11 +89,11 @@ export class MssqlExternalDataSource extends SequelizeDataSource {
       },
     } as any);
 
-    this.database = dbInstance;
+    this.database = dbInstance as AuthenticatableDB;
   }
 
   async load() {
-    await authenticateDatabase(this.database as any);
+    await authenticateDatabase(this.database);
     await (this.collectionManager as any)?.sync?.();
   }
 
