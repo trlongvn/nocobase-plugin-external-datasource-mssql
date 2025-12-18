@@ -16,8 +16,7 @@ const MssqlDataSourceSettingsForm: React.FC<Props> = ({
   loadCollections,
   from,
 }) => {
-  const { t } = useTranslation();
-  const SchemaComponentAny = SchemaComponent as any;
+  const { t } = useTranslation(NAMESPACE);
   const fieldsHelper = CollectionsTableField?.({ NAMESPACE, t });
 
   const collectionsSchema =
@@ -51,7 +50,7 @@ const MssqlDataSourceSettingsForm: React.FC<Props> = ({
       },
       displayName: {
         type: 'string',
-        title: t('Display name'),
+        title: t('Display name', { ns: NAMESPACE }),
         default: 'MSSQL',
         'x-decorator': 'FormItem',
         'x-component': 'Input',
@@ -116,14 +115,14 @@ const MssqlDataSourceSettingsForm: React.FC<Props> = ({
                 properties: {
                   encrypt: {
                     type: 'boolean',
-                    default: true,
+                    default: false,
                     title: t('Encrypt connection (SSL/TLS)'),
                     'x-decorator': 'FormItem',
                     'x-component': 'Checkbox',
                   },
                   trustServerCertificate: {
                     type: 'boolean',
-                    default: true,
+                    default: false,
                     title: t('Trust server certificate'),
                     'x-decorator': 'FormItem',
                     'x-component': 'Checkbox',
@@ -140,10 +139,16 @@ const MssqlDataSourceSettingsForm: React.FC<Props> = ({
   };
 
   return (
-    <SchemaComponentAny
-      schema={schema}
-      components={fieldsHelper ? { CollectionsTable: fieldsHelper.CollectionsTable } : {}}
-    />
+    <>
+      {/* SchemaComponent typing is tied to the client package's bundled React version. */}
+      {
+        // @ts-expect-error Suppress cross-version React typing mismatch for JSX usage.
+        <SchemaComponent
+          schema={schema}
+          components={fieldsHelper ? { CollectionsTable: fieldsHelper.CollectionsTable } : {}}
+        />
+      }
+    </>
   );
 };
 
