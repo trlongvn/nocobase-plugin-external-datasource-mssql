@@ -1,5 +1,5 @@
 import Database from '@nocobase/database';
-import { DataSource } from '@nocobase/plugin-data-source-manager';
+import { SequelizeDataSource } from '@nocobase/data-source-manager';
 import { authenticateDatabase } from '../utils/authenticateDatabase';
 
 type MssqlDialectOptions = {
@@ -13,41 +13,22 @@ type MssqlDialectOptions = {
 type LoggingOption = boolean | ((sql: string, timing?: number) => void);
 
 interface MssqlDataSourceOptions {
-  database?: string;
-  username?: string;
-  password?: string;
-  host?: string;
+  database: string;
+  username: string;
+  password: string;
+  host: string;
   port?: number;
   dialectOptions?: MssqlDialectOptions;
   logging?: LoggingOption;
   [key: string]: any;
 }
 
-export class MssqlExternalDataSource extends DataSource {
-  /**
-   * Underlying MSSQL database instance created during init and closed in destroy.
-   * Exposes the collection manager used for collection CRUD operations.
-   */
+export class MssqlExternalDataSource extends SequelizeDataSource {
   database: Database;
 
-  async init() {
-    const options = this.options as MssqlDataSourceOptions;
-    if (!options) {
-      throw new Error('MSSQL data source options are required.');
-    }
-
-    const {
-      database,
-      username,
-      password,
-      host,
-      port,
-      dialectOptions,
-      logging,
-      ...rest
-    }: MssqlDataSourceOptions = options;
-
-    this.database = new Database({
+  constructor(options: MssqlDataSourceOptions) {
+    const { database, username, password, host, port, dialectOptions, logging, ...rest } = options;
+    const dbInstance = new Database({
       ...rest,
       dialect: 'mssql',
       database,
@@ -59,17 +40,24 @@ export class MssqlExternalDataSource extends DataSource {
       dialectOptions,
     });
 
-    await authenticateDatabase(this.database);
+    super({
+      ...options,
+      collectionManager: {
+        database: dbInstance,
+      },
+    } as any);
+
+    this.database = dbInstance;
   }
 
-  get collectionManager() {
-    return this.database.collectionManager;
+  async load() {
+    await authenticateDatabase(this.database as any);
+    await (this.collectionManager as any)?.sync?.();
   }
 
-  async destroy() {
-    if (this.database) {
+  async close() {
+    if (this.database?.close) {
       await this.database.close();
     }
-    await super.destroy();
   }
 }

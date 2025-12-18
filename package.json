@@ -9,6 +9,10 @@
     ".": "./dist/server/index.js",
     "./client": "./dist/client/index.js"
   },
+  "nocobase": {
+    "server": "./dist/server/index.js",
+    "client": "./dist/client/index.js"
+  },
   "license": "MIT",
   "keywords": [
     "nocobase",
@@ -21,20 +25,23 @@
     "dev": "tsc --watch"
   },
   "peerDependencies": {
-    "@nocobase/server": ">=0.14.0",
-    "@nocobase/client": ">=0.14.0"
+    "@nocobase/server": "1.x",
+    "@nocobase/client": "1.x",
+    "@nocobase/plugin-data-source-manager": "1.x"
   },
   "dependencies": {
     "mssql": "^10.0.1",
     "tedious": "^16.6.1"
   },
   "devDependencies": {
-    "@nocobase/server": "^0.14.0",
-    "@nocobase/client": "^0.14.0",
+    "@nocobase/server": "1.9.25",
+    "@nocobase/client": "1.9.25",
+    "@nocobase/plugin-data-source-manager": "1.9.25",
     "@types/node": "^20.0.0",
     "@types/react": "^18.0.0",
     "antd": "^5.0.0",
     "react": "^18.0.0",
+    "react-dom": "^18.0.0",
     "typescript": "^5.0.0"
   }
 }

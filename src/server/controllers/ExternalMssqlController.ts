@@ -1,5 +1,4 @@
 import Database from '@nocobase/database';
-import { Context, Controller } from '@nocobase/server';
 import { authenticateDatabase } from '../utils/authenticateDatabase';
 
 type DialectOptions = {
@@ -13,11 +12,12 @@ type DialectOptions = {
 type LoggingOption = boolean | ((sql: string, timing?: number) => void);
 
 type TestConnectionBody = {
-  host?: string;
+  host: string;
   port?: number;
-  username?: string;
-  password?: string;
-  database?: string;
+  username: string;
+  password: string;
+  database: string;
+  schema?: string;
   dialectOptions?: DialectOptions;
   logging?: LoggingOption;
 };
@@ -25,28 +25,32 @@ type TestConnectionBody = {
 /**
  * Controller exposing endpoints for the external MSSQL data source namespace.
  */
-export class ExternalMssqlController extends Controller {
+export class ExternalMssqlController {
   /**
    * POST external-mssql:testConnection
    * Validates incoming connection parameters and attempts to authenticate with the target MSSQL instance.
    * Responds with `{ status: 'success' }` on success or `{ status: 'error', message }` with HTTP 400 on failure.
    */
-  async testConnection(ctx: Context) {
+  static async testConnection(ctx: any) {
     const {
       host,
       port,
       username,
       password,
       database,
+      schema,
       dialectOptions,
       logging,
     } = (ctx.request?.body as TestConnectionBody) || {};
 
-    if (!host || !database || !username) {
+    const missingRequired =
+      !host?.trim() || !database?.trim() || !username?.trim() || !password?.trim();
+
+    if (missingRequired) {
       ctx.status = 400;
       ctx.body = {
         status: 'error',
-        message: 'Host, database, and username are required to test the connection.',
+        message: 'Host, database, username, and password are required to test the connection.',
       };
       return;
     }
@@ -58,6 +62,7 @@ export class ExternalMssqlController extends Controller {
       username,
       password,
       database,
+      schema,
       logging,
       dialectOptions,
     });

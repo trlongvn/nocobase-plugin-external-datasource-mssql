@@ -1,2 +1,2 @@
 export { PluginExternalDatasourceMssqlClient as default } from './plugin';
-export { MssqlConfigurationForm } from './MssqlConfigurationForm';
+export { default as MssqlConfigForm } from './components/MssqlConfigForm';

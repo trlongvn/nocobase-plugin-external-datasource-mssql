@@ -1,16 +1,11 @@
 import { Plugin } from '@nocobase/client';
-import { MssqlConfigurationForm } from './MssqlConfigurationForm';
+import MssqlConfigForm from './components/MssqlConfigForm';
 
 export class PluginExternalDatasourceMssqlClient extends Plugin {
   async load() {
-    // Register as a data source type
-    this.app.dataSourceManager.addDataSourceTypes({
-      type: 'mssql',
-      title: 'Microsoft SQL Server',
-      description: 'Connect to external Microsoft SQL Server database',
-      icon: 'DatabaseOutlined',
-      ConfigurationForm: MssqlConfigurationForm,
-    });
+    // Client-side registration APIs have changed in NocoBase 1.x; expose the configuration
+    // component for host apps to wire manually.
+    this.app.addComponents?.({ MssqlConfigForm });
   }
 }
 

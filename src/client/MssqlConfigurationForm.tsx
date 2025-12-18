@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAPIClient } from '@nocobase/client';
 import { Form, Input, InputNumber, Button, message, Space, Checkbox } from 'antd';
+import { MssqlFormValues, normalizeMssqlPayload } from './utils/normalizeMssqlPayload';
 
 export const MssqlConfigurationForm: React.FC<any> = (props) => {
   const { value, onChange } = props;
@@ -12,20 +13,21 @@ export const MssqlConfigurationForm: React.FC<any> = (props) => {
     try {
       const values = await form.validateFields();
       setLoading(true);
-      
+      const payload = normalizeMssqlPayload(values);
+
       const response = await api.request({
-        url: 'mssql:testConnection',
+        url: 'external-mssql:testConnection',
         method: 'post',
-        data: values,
+        data: payload,
       });
 
-      if (response?.data?.success) {
+      if (response?.data?.status === 'success') {
         message.success('Connection successful!');
       } else {
         message.error(response?.data?.message || 'Connection failed');
       }
-    } catch (error) {
-      message.error('Connection test failed: ' + (error.message || 'Unknown error'));
+    } catch (error: any) {
+      message.error('Connection test failed: ' + (error?.message || 'Unknown error'));
     } finally {
       setLoading(false);
     }
@@ -82,7 +84,7 @@ export const MssqlConfigurationForm: React.FC<any> = (props) => {
 
       <Form.Item
         label="Username"
-        name="user"
+        name="username"
         rules={[{ required: true, message: 'Please input the username!' }]}
       >
         <Input placeholder="username" />

@@ -1,17 +1,19 @@
 export interface MssqlConnectionOptions {
   host: string;
   port?: number;
-  user: string;
+  username: string;
   password: string;
   database: string;
   schema?: string;
-  encrypt?: boolean;
-  trustServerCertificate?: boolean;
+  dialectOptions?: {
+    options?: {
+      encrypt?: boolean;
+      trustServerCertificate?: boolean;
+    };
+  };
   logging?: boolean;
 }
 
-export interface TestConnectionResponse {
-  success: boolean;
-  message: string;
-  error?: string;
-}
+export type TestConnectionResponse =
+  | { status: 'success'; message?: string }
+  | { status: 'error'; message: string };

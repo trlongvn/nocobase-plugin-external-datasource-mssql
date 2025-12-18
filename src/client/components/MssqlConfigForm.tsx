@@ -1,52 +1,46 @@
 import React from 'react';
 import { Button, Checkbox, Form, Input, InputNumber, Space, message } from 'antd';
-import { useActionContext, useRequest } from '@nocobase/client';
+import { useAPIClient, useRequest } from '@nocobase/client';
+import {
+  MssqlFormValues,
+  NormalizedMssqlPayload,
+  normalizeMssqlPayload,
+} from '../utils/normalizeMssqlPayload';
 
-type FormValues = {
-  host?: string;
-  port?: number;
-  database?: string;
-  username?: string;
-  password?: string;
-  encrypt?: boolean;
+const DEFAULT_INITIAL_VALUES: Partial<MssqlFormValues> = {
+  port: 1433,
+  encrypt: false,
+  schema: 'dbo',
+  trustServerCertificate: false,
 };
 
-type ConnectionPayload = Omit<FormValues, 'encrypt'> & {
-  dialectOptions: {
-    options: {
-      encrypt: boolean;
-    };
-  };
+type FormProps = {
+  onSubmit?: (values: NormalizedMssqlPayload) => void | Promise<void>;
+  onChange?: (values: MssqlFormValues) => void;
 };
 
-const normalizePayload = (values: FormValues): ConnectionPayload => {
-  const { encrypt, ...rest } = values;
-  return {
-    ...rest,
-    dialectOptions: {
-      options: {
-        encrypt: !!encrypt,
-      },
-    },
-  };
-};
-
-const MssqlConfigForm: React.FC = () => {
-  const [form] = Form.useForm<FormValues>();
-  const action = useActionContext();
+const MssqlConfigForm: React.FC<FormProps> = ({ onSubmit, onChange }) => {
+  const [form] = Form.useForm<MssqlFormValues>();
+  const api = useAPIClient();
   const { run: testConnection, loading } = useRequest(
-    (data: ConnectionPayload) => ({
-      url: 'external-mssql:testConnection',
-      method: 'post',
-      data,
-    }),
+    async (data: NormalizedMssqlPayload) => {
+      const response = await api.request({
+        url: 'external-mssql:testConnection',
+        method: 'post',
+        data,
+      });
+      if (response?.data?.status === 'error') {
+        throw new Error(response.data.message);
+      }
+      return response?.data;
+    },
     { manual: true },
   );
 
   const handleTestConnection = async () => {
     try {
       const values = await form.validateFields();
-      await testConnection(normalizePayload(values));
+      await testConnection(normalizeMssqlPayload(values));
       message.success('Connection successful');
     } catch (error: any) {
       const msg =
@@ -57,9 +51,16 @@ const MssqlConfigForm: React.FC = () => {
     }
   };
 
-  const handleFinish = async (values: FormValues) => {
-    if (action?.run) {
-      await action.run(normalizePayload(values));
+  const handleFinish = async (values: MssqlFormValues) => {
+    const payload = normalizeMssqlPayload(values);
+    if (onSubmit) {
+      await onSubmit(payload);
+    }
+  };
+
+  const handleValuesChange = (_changed: any, allValues: MssqlFormValues) => {
+    if (onChange) {
+      onChange(allValues);
     }
   };
 
@@ -68,7 +69,8 @@ const MssqlConfigForm: React.FC = () => {
       form={form}
       layout="vertical"
       onFinish={handleFinish}
-      initialValues={{ port: 1433, encrypt: false }}
+      onValuesChange={handleValuesChange}
+      initialValues={DEFAULT_INITIAL_VALUES}
     >
       <Form.Item
         name="host"
@@ -87,6 +89,9 @@ const MssqlConfigForm: React.FC = () => {
       >
         <Input />
       </Form.Item>
+      <Form.Item name="schema" label="Schema">
+        <Input placeholder="dbo" />
+      </Form.Item>
       <Form.Item
         name="username"
         label="Username"
@@ -97,11 +102,15 @@ const MssqlConfigForm: React.FC = () => {
       <Form.Item
         name="password"
         label="Password"
+        rules={[{ required: true, message: 'Please enter password' }]}
       >
         <Input.Password />
       </Form.Item>
       <Form.Item name="encrypt" valuePropName="checked">
         <Checkbox>Encrypt connection (SSL/TLS)</Checkbox>
+      </Form.Item>
+      <Form.Item name="trustServerCertificate" valuePropName="checked">
+        <Checkbox>Trust server certificate</Checkbox>
       </Form.Item>
 
       <Space>
