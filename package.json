@@ -7,7 +7,8 @@
   "main": "dist/server/index.js",
   "exports": {
     ".": "./dist/server/index.js",
-    "./client": "./dist/client/index.js"
+    "./client": "./dist/client/index.js",
+    "./package.json": "./package.json"
   },
   "nocobase": {
     "server": "./dist/server/index.js",
@@ -21,8 +22,10 @@
     "external-datasource"
   ],
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch"
+    "build": "npm run build:server && npm run build:client",
+    "build:server": "tsc -p tsconfig.server.json",
+    "build:client": "tsc -p tsconfig.client.json",
+    "dev": "npm run build:server -- --watch & npm run build:client -- --watch"
   },
   "peerDependencies": {
     "@nocobase/server": "1.x",
