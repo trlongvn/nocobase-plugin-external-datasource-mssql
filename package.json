@@ -4,15 +4,15 @@
   "displayName": "MSSQL External Data Source",
   "displayName.zh-CN": "MSSQL 外部数据源",
   "description": "NocoBase MSSQL External Data Source Plugin",
-  "main": "dist/server/index.js",
+  "main": "dist/server/server/index.js",
   "exports": {
-    ".": "./dist/server/index.js",
-    "./client": "./dist/client/index.js",
+    ".": "./dist/server/server/index.js",
+    "./client": "./dist/client/client/index.js",
     "./package.json": "./package.json"
   },
   "nocobase": {
-    "server": "./dist/server/index.js",
-    "client": "./dist/client/index.js"
+    "server": "./dist/server/server/index.js",
+    "client": "./dist/client/client/index.js"
   },
   "license": "MIT",
   "keywords": [
