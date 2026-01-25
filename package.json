@@ -1,50 +1,36 @@
 {
-  "name": "@nocobase/plugin-external-datasource-mssql",
-  "version": "0.1.0",
-  "displayName": "MSSQL External Data Source",
-  "displayName.zh-CN": "MSSQL 外部数据源",
-  "description": "NocoBase MSSQL External Data Source Plugin",
-  "main": "dist/server/server/index.js",
-  "exports": {
-    ".": "./dist/server/server/index.js",
-    "./client": "./dist/client/client/index.js",
-    "./package.json": "./package.json"
-  },
-  "nocobase": {
-    "server": "./dist/server/server/index.js",
-    "client": "./dist/client/client/index.js"
-  },
-  "license": "MIT",
-  "keywords": [
-    "nocobase",
-    "plugin",
-    "mssql",
-    "external-datasource"
-  ],
+  "name": "@gemvn90/plugin-data-source-mssql",
+  "displayName": "Data source: MSSQL",
+  "displayName.ru-RU": "Источник данных: MSSQL",
+  "displayName.zh-CN": "数据源：MSSQL",
+  "version": "1.9.48",
+  "description": "External MSSQL data source support for NocoBase.",
+  "license": "AGPL-3.0",
+  "main": "./dist/server/index.js",
   "scripts": {
-    "build": "npm run build:server && npm run build:client",
-    "build:server": "tsc -p tsconfig.server.json",
-    "build:client": "tsc -p tsconfig.client.json",
-    "dev": "npm run build:server -- --watch & npm run build:client -- --watch"
+    "postbuild": "node ./scripts/copy-tedious.js",
+    "prepack": "node ./scripts/copy-tedious.js"
   },
-  "peerDependencies": {
-    "@nocobase/server": "1.x",
-    "@nocobase/client": "1.x",
-    "@nocobase/plugin-data-source-manager": "1.x"
-  },
+  "keywords": [
+    "Data sources"
+  ],
+  "files": [
+    "dist"
+  ],
   "dependencies": {
-    "mssql": "^10.0.1",
-    "tedious": "^16.6.1"
+    "tedious": "^18.6.1"
   },
-  "devDependencies": {
-    "@nocobase/server": "1.9.25",
-    "@nocobase/client": "1.9.25",
-    "@nocobase/plugin-data-source-manager": "1.9.25",
-    "@types/node": "^20.0.0",
-    "@types/react": "^18.0.0",
-    "antd": "^5.0.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "typescript": "^5.0.0"
+  "bundleDependencies": [
+    "tedious"
+  ],
+  "bundledDependencies": [
+    "tedious"
+  ],
+  "peerDependencies": {
+    "@nocobase/client": "1.x",
+    "@nocobase/database": "1.x",
+    "@nocobase/plugin-data-source-manager": "1.x",
+    "@nocobase/server": "1.x",
+    "@nocobase/test": "1.x"
   }
 }
